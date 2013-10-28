@@ -1,0 +1,7 @@
+t1 := sleep 100
+t2 := sleep 100
+t3 := sleep 100
+t4 := sleep 100
+t5 := sleep 100
+t1 -> t2 -> t3 -> t5
+t2 -> t4 -> t5

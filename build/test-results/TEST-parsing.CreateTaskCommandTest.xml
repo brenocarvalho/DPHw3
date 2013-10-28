@@ -1,0 +1,7 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<testsuite name="parsing.CreateTaskCommandTest" tests="1" failures="0" errors="0" timestamp="2013-10-13T18:00:10" hostname="breno-notebook" time="0.006">
+  <properties/>
+  <testcase name="testRun" classname="parsing.CreateTaskCommandTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
