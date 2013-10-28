@@ -14,7 +14,7 @@ public class Main {
 		
 		/*
 		if( args.length < 2){
-			throw new Exception("Bad parameters. I need a filename and a threads number.");
+			throw new Exception("Bad parameters. I need a filename and a threads quantity.");
 		}
 		Parser parser = new Parser();
 		parser.parse(args[0]);

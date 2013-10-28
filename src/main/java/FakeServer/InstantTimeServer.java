@@ -22,7 +22,7 @@ public class InstantTimeServer implements IServer{
 		out_messages.remove(0);		
 	}
 
-	// TODO change this raw type to the client type, and put randomness
+	// TODO change this raw type to the client type
 	public void request(TaskMessage message) {
 		Task task = message.getTask();
 		if(!busy){
@@ -35,7 +35,6 @@ public class InstantTimeServer implements IServer{
 					//System.out.printf("Elapsed: %d nano sec\n", System.nanoTime()-begin);
 					out = new SuccessMessage<IServer>(this, task);
 				} catch (Exception e) {
-					// TODO create error message
 					out = new FailMessage<IServer>(this, task);
 				}
 				out_messages.add(out);
