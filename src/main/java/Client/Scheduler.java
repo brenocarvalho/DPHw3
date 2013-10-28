@@ -6,7 +6,7 @@ import java.util.List;
 import model.*;
 
 public class Scheduler {
-	private List<LogEntry> log; // TODO change to List<LogEntry>
+	private List<LogEntry> log;
 	private Graph graph;
 	
 	public Node[] getOrphans(){

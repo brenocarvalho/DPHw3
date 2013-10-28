@@ -1,16 +1,19 @@
 package FakeServer;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 
 import model.Task;
 import Client.IServer;
 import Network.*;
 
-public class InstantTimeServer implements IServer{
+public class InstantTimeServer extends Observable implements IServer, Iterator{
 
 	private List<Message> in_messages, out_messages;
 	private boolean busy;
+	private long lastMessageSentTime;
 	
 	public InstantTimeServer(){
 		busy = false;
@@ -18,37 +21,47 @@ public class InstantTimeServer implements IServer{
 		out_messages = new LinkedList<Message>();
 	}
 	
-	public void remove() {
+	public void enqueueOutput(Message message){
+		out_messages.add(message);
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public void remove(){
 		out_messages.remove(0);		
 	}
 
-	// TODO change this raw type to the client type
-	public void request(TaskMessage message) {
+	public void request(TaskMessage message){
 		Task task = message.getTask();
+		long timeElapsed = 0;
+		Message out = null;
 		if(!busy){
-			busy = true;
-			Message out = null;
+			busy = true;			
 			if(in_messages.isEmpty()){
 				try {
-					long begin = System.nanoTime();
+					timeElapsed = System.currentTimeMillis();
 					task.run();
+					timeElapsed = System.currentTimeMillis() - timeElapsed; 
 					//System.out.printf("Elapsed: %d nano sec\n", System.nanoTime()-begin);
-					out = new SuccessMessage<IServer>(this, task);
+					out = new SuccessMessage<IServer>(this, task, timeElapsed);
 				} catch (Exception e) {
-					out = new FailMessage<IServer>(this, task);
+					busy = false;
+					out = new FailMessage<IServer>(this, task, System.currentTimeMillis() - timeElapsed);
 				}
-				out_messages.add(out);
+				enqueueOutput(out);
 			}else{
 				while(!in_messages.isEmpty()){
 					task = ((TaskMessage) in_messages.remove(0)).getTask();
 					try {
+						timeElapsed = System.currentTimeMillis();
 						task.run();
-						out = new SuccessMessage<IServer>(this, task);
+						timeElapsed = System.currentTimeMillis() - timeElapsed;
+						out = new SuccessMessage<IServer>(this, task, timeElapsed);
 					} catch (Exception e) {
-						out = new FailMessage<IServer>(this, task);
+						out = new FailMessage<IServer>(this, task, System.currentTimeMillis() - timeElapsed);
 						continue;
 					}
-					out_messages.add(out);
+					enqueueOutput(out);
 				}
 			}
 			busy = false;
@@ -58,20 +71,28 @@ public class InstantTimeServer implements IServer{
 		
 	}
 
-	public void getStatus() {
-		// TODO implement method to inform if server is online
-		
+	public void getStatus(){
+		enqueueOutput(new ServerStatusMessage<IServer>(this, isBusy()?0:1));
 	}
+	
 	public boolean isBusy(){
 		return busy;
 	}
 
-	public boolean hasNext() {
+	public boolean isActive(){
+		return ((lastMessageSentTime < Constants.MAX_TIMEOUT) || hasNext());
+	}
+	
+	public boolean hasNext(){
 		return !out_messages.isEmpty();
 	}
 
-	public Message next() {
+	public Message next(){
 		return out_messages.remove(0);
+	}
+
+	public Iterator iterator() {
+		return this;
 	}
 
 }

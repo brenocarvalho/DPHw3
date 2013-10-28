@@ -3,13 +3,16 @@ package Network;
 import model.Task;
 
 public class SuccessMessage<S> extends Message <S>{
-	private S sender;
 	private Task task;
+	private long elapsedTime;
 	
-	public SuccessMessage(S sender, Task task){
+	public SuccessMessage(S sender, Task task, long elapsedTime){
 		super(sender);
-		this.sender = sender; this.task = task;
+		this.task = task;
+		this.elapsedTime = elapsedTime;
 	}
 	
-	public Task getTask(){return task; }
+	public Task getTask(){ return task; }
+	
+	public long getElapsedTime(){ return elapsedTime;}
 }
