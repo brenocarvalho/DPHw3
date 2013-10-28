@@ -1,5 +1,6 @@
 package model;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Collection;
@@ -75,6 +76,10 @@ public class Graph {
 	
 	public synchronized Node getOrphan(){
 		return orphanNodes.iterator().next();
+	}
+	
+	public synchronized Node[] getOrphans(){
+		return orphanNodes.toArray(new Node[1]);
 	}
 	
 	public synchronized Node popOrphan(){
