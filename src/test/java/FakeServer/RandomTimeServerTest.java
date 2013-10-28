@@ -14,7 +14,7 @@ public class RandomTimeServerTest {
 		server = new RandomTimeServer();
 	}
 	@Test
-	public void test1(){
+	public void testSingleTask(){
 		Task t = null;
 		try {
 			t = new Task("Task1", 100);
@@ -23,6 +23,9 @@ public class RandomTimeServerTest {
 		}
 		assertTrue("t != null", t != null);
 		server.request(new TaskMessage<Object>(this, t));
+		try {
+			Thread.sleep(Constants.MAX_TIMEOUT);
+		} catch (InterruptedException e) {}
 		assertTrue("Expected task didn't run",((SuccessMessage) server.next()).getTask().equals(t));
 	}
 	
