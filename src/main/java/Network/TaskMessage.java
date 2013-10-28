@@ -9,7 +9,6 @@ public class TaskMessage <S> extends Message<S>{
 	public TaskMessage(S sender, Task task){
 		super(sender);
 		this.task = task;
-		this.sender = sender;
 	}
 	
 	public Task getTask(){ return task;}
