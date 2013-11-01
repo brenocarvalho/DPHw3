@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8"?>
-<testsuite name="parsing.ChainTasksCommandTest" tests="1" failures="0" errors="0" timestamp="1970-01-01T00:00:00" hostname="breno-notebook" time="1.381687210648E9">
+<testsuite name="parsing.ChainTasksCommandTest" tests="1" failures="0" errors="0" timestamp="1970-01-01T00:00:00" hostname="breno-notebook" time="1.383335507294E9">
   <properties/>
-  <testcase name="testRun" classname="parsing.ChainTasksCommandTest" time="0.007"/>
+  <testcase name="testRun" classname="parsing.ChainTasksCommandTest" time="0.01"/>
   <system-out><![CDATA[t1 -> t2
 t2 -> t3
 t3 -> t4

@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="UTF-8"?>
-<testsuite name="model.CountCodeTest" tests="1" failures="0" errors="0" timestamp="2013-10-13T18:00:10" hostname="breno-notebook" time="0.452">
+<testsuite name="model.CountCodeTest" tests="1" failures="0" errors="0" timestamp="2013-11-01T19:51:47" hostname="breno-notebook" time="0.451">
   <properties/>
-  <testcase name="testRun" classname="model.CountCodeTest" time="0.452"/>
+  <testcase name="testRun" classname="model.CountCodeTest" time="0.451"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
