@@ -1,16 +1,14 @@
+import server.*;
+import network.*;
+import client.*;
+import fakeNetwork.InstantTimeServer;
 import model.*;
-import Client.*;
-import FakeServer.*;
-import Network.*;
 
 public class Main {
 	public static void main(String args[]) throws Exception{
 		
-		IServer server = new InstantTimeServer();
-		server.acceptRequest(new TaskMessage<Object>(null, new Task("Hi",1)));
-		if(server.hasNext()){
-			System.out.print(((SuccessMessage) server.next()).getTask().getName());
-		}
+		IServer server = new InstantTimeServer("localServer");
+		server.sendRequest(new TaskMessage<Object>(null, new Task("Hi",1)));
 		
 		/*
 		if( args.length < 2){
