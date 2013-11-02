@@ -22,7 +22,7 @@ public class InstantServerTest {
 			fail("Couldn't create the task!");
 		}
 		assertTrue("t != null", t != null);
-		server.request(new TaskMessage<Object>(this, t));
+		server.acceptRequest(new TaskMessage<Object>(this, t));
 		try {
 			Thread.sleep(Constants.MAX_TIMEOUT);
 		} catch (InterruptedException e) {}

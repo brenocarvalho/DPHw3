@@ -7,7 +7,7 @@ public class Main {
 	public static void main(String args[]) throws Exception{
 		
 		IServer server = new InstantTimeServer();
-		server.request(new TaskMessage<Object>(null, new Task("Hi",1)));
+		server.acceptRequest(new TaskMessage<Object>(null, new Task("Hi",1)));
 		if(server.hasNext()){
 			System.out.print(((SuccessMessage) server.next()).getTask().getName());
 		}
