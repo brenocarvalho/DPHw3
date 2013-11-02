@@ -3,6 +3,8 @@ package Client;
 import java.util.LinkedList;
 import java.util.List;
 
+import Network.IServer;
+
 import model.*;
 
 public class Scheduler {

@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Observable;
 
 import model.Task;
-import Client.IServer;
 import Network.*;
 
-public class InstantTimeServer extends Observable implements IServer, Iterator{
+public class InstantTimeServer implements IServer, Iterator{
 
 	private List<Message> in_messages, out_messages;
 	private boolean busy;
@@ -23,15 +22,13 @@ public class InstantTimeServer extends Observable implements IServer, Iterator{
 	
 	public void enqueueOutput(Message message){
 		out_messages.add(message);
-		this.setChanged();
-		this.notifyObservers();
 	}
 	
 	public void remove(){
 		out_messages.remove(0);		
 	}
 
-	public void request(TaskMessage message){
+	public void acceptRequest(TaskMessage message){
 		Task task = message.getTask();
 		long timeElapsed = 0;
 		Message out = null;
@@ -91,8 +88,16 @@ public class InstantTimeServer extends Observable implements IServer, Iterator{
 		return out_messages.remove(0);
 	}
 
-	public Iterator iterator() {
+	public Iterator iterator(){
 		return this;
+	}
+
+	public void informSuccess(IClient client, SuccessMessage success){
+		client.receiveSuccess(this, success);
+	}
+
+	public void informFail(IClient client, FailMessage fail){
+		client.receiveFailure(this, fail);
 	}
 
 }

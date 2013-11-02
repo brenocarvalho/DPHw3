@@ -1,6 +1,6 @@
 package model;
 
-import Client.IServer;
+import Network.IServer;
 
 public class LogEntry {
 	private Task task;

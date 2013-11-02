@@ -9,7 +9,7 @@ import Network.*;
 
 import model.Task;
 
-public class ServerMenager implements Observer{
+public class ServerMenager{
 	private List<IServer> servers;
 	private IServer localServer;
 	
@@ -44,33 +44,15 @@ public class ServerMenager implements Observer{
 	public void delegate(Task task) throws Exception{
 		for(IServer server: servers){
 			if(server.isActive()){
-				server.request(new TaskMessage(this, task));
+				server.acceptRequest(new TaskMessage(this, task));
 				return;
 			}
 		}
 		
 		if(localServer.isActive()){
-			localServer.request(new TaskMessage(this, task));
+			localServer.acceptRequest(new TaskMessage(this, task));
 			return;
 		}
 		throw new Exception("Message couldn't be sent!");
-	}
-
-	public void update(Observable arg0, Object arg1) {
-		//TODO This method takes a message from the server and process it to free more tasks.
-		/*
-		IServer server = (IServer) arg0;
-		for(Message msg: server){
-			if(msg instanceof SuccessMessage){
-				SuccessMessage success = (SuccessMessage) msg;
-			
-			}else{
-				if(msg instanceof FailMessage){
-					SuccessMessage success = (SuccessMessage) msg;
-				
-				}
-			}
-		}
-		*/
 	}
 }
