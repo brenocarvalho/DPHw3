@@ -1,11 +1,14 @@
 package server;
 
+import java.util.List;
+
 import model.Task;
 import network.*;
 
-public class Agent {
+public class Agent{
 	String name;
 	IClient client;
+	List<Task> tasks;
 	
 	public Agent(String name, IClient client){
 		this.name = name;
@@ -13,10 +16,13 @@ public class Agent {
 		this.client.setAgent(this);
 	}
 
+	public synchronized void enqueue(Task task){
+		tasks.add(task);
+	}
 
 	public String getName(){ return name;}
 	
-	public void execute(TaskMessage<IClient> command){
+	public void execute(TaskMessage command){
 		Task task = command.getTask();
 		long begin = System.currentTimeMillis(), end;
 		try {
@@ -27,16 +33,5 @@ public class Agent {
 		}
 		end = System.currentTimeMillis();
 		client.receiveSuccess(new SuccessMessage(getName(), task,end-begin));
-	}
-	
-	public static void main(String[] args){
-		String name;
-		if(args.length < 2){
-			name = "localServer";
-		}else{
-			name = args[1];
-		}
-		IClient client = null; //TODO Use an actual client here
-		Agent local = new Agent(name, client);
 	}
 }

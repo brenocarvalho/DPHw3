@@ -107,9 +107,11 @@ public class ServerMenager{
 			}
 		}
 		processing.add(task);
+		System.out.println("Sending task");
 		server.sendRequest(new TaskMessage("client", task));
 	}
 
+	/*
 	public static void main(String[] args) throws Exception{
 		if(args.length < 2){
 			throw new Exception(String.format("Usage: java %s [file_name] [server_adress]+", args[0]));
@@ -129,4 +131,5 @@ public class ServerMenager{
 		}
 		System.out.print("Done");
 	}
+	*/
 }

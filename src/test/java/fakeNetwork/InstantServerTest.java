@@ -33,5 +33,4 @@ public class InstantServerTest {
 		server.sendRequest(new TaskMessage("client", tA));
 		assertTrue("Task doesn't eliminated in client", !menager.hasMessage());
 	}
-	
 }

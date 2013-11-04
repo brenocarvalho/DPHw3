@@ -2,11 +2,11 @@ package network;
 
 import model.Task;
 
-public class FailMessage <S> extends Message <S>{
+public class FailMessage extends Message{
 	private Task task;
 	private long elapsedTime;
 
-	public FailMessage(S sender, Task task, long elapsedTime){
+	public FailMessage(String sender, Task task, long elapsedTime){
 		super(sender);
 		this.task= task;
 		this.elapsedTime = elapsedTime;

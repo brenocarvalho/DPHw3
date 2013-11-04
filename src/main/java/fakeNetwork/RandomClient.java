@@ -44,7 +44,7 @@ public class RandomClient implements IClient{
 		Task task;
 		for(int i = 0; i < qtd; i++){
 			task = new Task("Sleep", 100);
-			agent.execute(new TaskMessage(this, task));
+			agent.execute(new TaskMessage(this.toString(), task));
 			System.out.print("Sleep\n");
 			Thread.sleep(generator.nextInt(100)+50);
 		}

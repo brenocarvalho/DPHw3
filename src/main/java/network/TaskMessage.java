@@ -2,11 +2,11 @@ package network;
 
 import model.Task;
 
-public class TaskMessage <S> extends Message<S>{
+public class TaskMessage extends Message{
 	private Task task;
-	private S sender;
+	private String sender;
 		
-	public TaskMessage(S sender, Task task){
+	public TaskMessage(String sender, Task task){
 		super(sender);
 		this.task = task;
 	}
@@ -17,6 +17,6 @@ public class TaskMessage <S> extends Message<S>{
 		return "Task Message: "+task.toString();
 	}
 
-	public S getSender() { return sender;}
+	public String getSender() { return sender;}
 
 }

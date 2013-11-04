@@ -1,10 +1,11 @@
 package network;
 
-public abstract class Message<S>{
-	private S sender;
-	public S getSender(){ return sender;}
+public abstract class Message{
+	private String sender;
 	
-	public Message(S sender){
+	public String getSender(){ return sender;}
+	
+	public Message(String sender){
 		this.sender = sender;
 	}
 }
