@@ -127,9 +127,9 @@ public class ServerNetInterface implements IClient, Runnable{
 			System.out.print("Connection Closed\n");
 			//System.exit(0);
 			try {
-				server.close();
+				closeSocket();
 				initialize();
-				input = new ObjectInputStream(service.getInputStream());
+				run();
 			} catch (IOException e1) {}
 		} catch (InterruptedException e) {
 		} catch (ClassNotFoundException e) {
