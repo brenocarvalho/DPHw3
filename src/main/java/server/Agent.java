@@ -10,7 +10,7 @@ public class Agent {
 	public Agent(String name, IClient client){
 		this.name = name;
 		this.client = client;
-		//this.server = server;
+		this.client.setAgent(this);
 	}
 
 
@@ -23,10 +23,10 @@ public class Agent {
 			task.run();
 		} catch (Exception e) {
 			end = System.currentTimeMillis();
-			//server.informFail(master, new FailMessage(getName(), task,end-begin));
+			client.receiveFailure(new FailMessage(getName(), task,end-begin));
 		}
 		end = System.currentTimeMillis();
-		//server.informSuccess(master, new SuccessMessage(getName(), task,end-begin));
+		client.receiveSuccess(new SuccessMessage(getName(), task,end-begin));
 	}
 	
 	public static void main(String[] args){
@@ -36,7 +36,7 @@ public class Agent {
 		}else{
 			name = args[1];
 		}
-		IClient client = null; //TODO Use a actual client here
-		Agent bond = new Agent(name, client);
+		IClient client = null; //TODO Use an actual client here
+		Agent local = new Agent(name, client);
 	}
 }

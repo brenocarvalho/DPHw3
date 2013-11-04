@@ -29,13 +29,9 @@ public class Scheduler {
 		return graph;
 	}
 	
-	public Scheduler(int numThreads, Graph g){
+	public Scheduler(Graph g){
 		log = new LinkedList();
 		this.graph = g;
-	}
-	
-	public Scheduler(int numThreads){
-		this(numThreads, null);
 	}
 	
 	@Override
