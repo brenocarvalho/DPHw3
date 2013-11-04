@@ -4,10 +4,10 @@ import client.IServer;
 
 public class LogEntry {
 	private Task task;
-	private IServer server;
+	private String server;
 	private long timeElapsed;
 	
-	public LogEntry(Task task, IServer server, long timeElapsed){
+	public LogEntry(Task task, String server, long timeElapsed){
 		this.task = task;
 		this.server = server;
 		this.timeElapsed = timeElapsed;
@@ -17,7 +17,7 @@ public class LogEntry {
 		return task;
 	}
 
-	public IServer getServer() {
+	public String getServer() {
 		return server;
 	}
 

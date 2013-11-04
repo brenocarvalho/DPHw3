@@ -22,7 +22,7 @@ public class Scheduler {
 	public boolean allTasksCompleted(){ return graph.getNumNodes() == 0;}
 	
 	public void updateLog(Task task, IServer server, long elapsedTime){
-		log.add(new LogEntry(task, server, elapsedTime));
+		log.add(new LogEntry(task, server.toString(), elapsedTime));
 	}
 	
 	public Graph getGraph(){

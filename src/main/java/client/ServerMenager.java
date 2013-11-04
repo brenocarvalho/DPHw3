@@ -79,8 +79,7 @@ public class ServerMenager{
 			}
 		}
 		if(localTask == null){
-			System.out.print("Unreadable task");
-			System.exit(1);
+			return;
 		}
 		processing.remove(localTask);
 		Node node = nodes.remove(localTask);

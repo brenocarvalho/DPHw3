@@ -1,8 +1,10 @@
 package server;
 
 import java.io.*;
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,37 +15,51 @@ import network.SuccessMessage;
 import network.TaskMessage;
 
 public class ServerNetInterface implements IClient, Runnable{
-	ServerSocket server;
-	Socket service;
-	ObjectInput input;
-	ObjectOutput output;
-	Agent agent;
-	List<TaskMessage> toRun;
+	private ServerSocket server;
+	private Socket service;
+	private ObjectInput input;
+	private ObjectOutput output;
+	private Agent agent;
+	private int port;
+	private List<TaskMessage> toRun;
+	
+	public static String getAddress(){
+		try {
+			return Inet4Address.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			return "localhost";
+		}
+	}
 	
 	public static void main(String[] args) throws Exception{
 		
-		ServerNetInterface client = new ServerNetInterface();
-		Agent agent = new Agent("local", client);
+		ServerNetInterface client = new ServerNetInterface(Constants.DEFAULT_PORT);
+		Agent agent = new Agent(getAddress(), client);
 		Thread listener = new Thread(client);
 		listener.start();
 		
 		while(true){
 			if(!client.toRun.isEmpty()){
 				agent.execute(client.toRun.remove(0));
-				//JOptionPane.showConfirmDialog(null,"Server received");
 			}
 			Thread.sleep(Constants.LISTEN_INTERVAL);
 		}
 	}
 	
-	public ServerNetInterface(){
+	public void initialize() throws IOException{
+		server = new ServerSocket(port);
+		System.out.println("Server ready.");
+		service = server.accept();
+		output = new ObjectOutputStream(service.getOutputStream());
+		output.flush();
+		input = new ObjectInputStream(service.getInputStream());
+	}
+	
+	public ServerNetInterface(int port){
 		try {	
-			server = new ServerSocket(1510);
-			service = server.accept();
-			output = new ObjectOutputStream(service.getOutputStream());
-			output.flush();
-			input = new ObjectInputStream(service.getInputStream());
-			System.out.println("Server ready!!");
+			this.port = port;
+			initialize();
+			System.out.println("Connection established!");
 			toRun = new ArrayList<TaskMessage>();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,10 +124,15 @@ public class ServerNetInterface implements IClient, Runnable{
 				Thread.sleep(Constants.LISTEN_INTERVAL);
 			}
 		} catch (EOFException e) {
-			System.out.print("Connection Closed");
+			System.out.print("Connection Closed\n");
+			//System.exit(0);
+			try {
+				server.close();
+				initialize();
+				input = new ObjectInputStream(service.getInputStream());
+			} catch (IOException e1) {}
 		} catch (InterruptedException e) {
 		} catch (ClassNotFoundException e) {
-		} catch (IOException e) {
-		}
+		} catch (IOException e) {}
 	}	
 }

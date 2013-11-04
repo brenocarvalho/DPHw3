@@ -71,6 +71,7 @@ public class Task implements Serializable{
 	}
 	
 	public String toString(){
-		return String.format("Task: %s \nEstimatedTime: %6.2f \n\n", this.name, this.extimatedTime);
+		//return String.format("Task: %s \nEstimatedTime: %6.2f \n\n", this.name, this.extimatedTime);
+		return String.format("Task: %s", this.name);
 	}
 }
