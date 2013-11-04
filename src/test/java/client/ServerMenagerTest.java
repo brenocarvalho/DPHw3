@@ -44,7 +44,7 @@ public class ServerMenagerTest {
 		menager.removeProcessingTask(a.getTask());
 		menager.loadTasks();
 		menager.removeProcessingTask(b.getTask());
-		assertTrue("Don't removing from scheduler", !menager.hasMessage());
+		assertTrue("Don't removing from scheduler", !menager.hasMessage() && sc.allTasksCompleted());
 	}
 	
 	@Test

@@ -1,15 +1,22 @@
 package model;
 
-import java.util.Observable;
+import java.io.Serializable;
 
 //TODO make Task implements Observable
 
-public class Task{
+public class Task implements Serializable{
 	private String name;
 	private double extimatedTime;
 	private Status status;
 	private Object parameters;
 	private Code code;
+	private static int number_counter = 0;
+	private int number;
+	
+	public boolean equals(Object obj){
+		Task b = (Task) obj;
+		return this.number == b.number;
+	}
 	
 	public Object getParameters(){
 		return parameters;
@@ -46,6 +53,7 @@ public class Task{
 
 	public Task(String name, long extimatedTime, Code code) throws Exception{
 		this.name = name;
+		this.number = number_counter++;
 		this.setExtimatedTime(extimatedTime);
 		this.setCode(code);
 		this.parameters = extimatedTime;

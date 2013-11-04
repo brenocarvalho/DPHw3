@@ -1,6 +1,8 @@
 package model;
 
-public class Status {
+import java.io.Serializable;
+
+public class Status implements Serializable{
 	private String msg;
 	public static final Status	SUCCESS = 	new Status("Successfuly executed"),
 									FAIL 	=	new Status("The execution Failed"),

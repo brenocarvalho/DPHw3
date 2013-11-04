@@ -3,7 +3,6 @@ package server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,26 +30,22 @@ public class ServerNetInterface implements IClient, Runnable{
 		while(true){
 			if(!client.toRun.isEmpty()){
 				agent.execute(client.toRun.remove(0));
+				//JOptionPane.showConfirmDialog(null,"Server received");
 			}
 			Thread.sleep(Constants.LISTEN_INTERVAL);
 		}
 	}
 	
 	public ServerNetInterface(){
-		try {
+		try {	
 			server = new ServerSocket(1510);
-			System.out.println("Server ready");
 			service = server.accept();
-			System.out.println("Server ready!");
 			output = new ObjectOutputStream(service.getOutputStream());
 			output.flush();
 			input = new ObjectInputStream(service.getInputStream());
-			
 			System.out.println("Server ready!!");
 			toRun = new ArrayList<TaskMessage>();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -64,6 +59,8 @@ public class ServerNetInterface implements IClient, Runnable{
 		} catch (IOException e) {}
 
 	}
+	
+//	public void setBusy(boolean val){ busy = val;}
 	
 	public void receiveSuccess(SuccessMessage success) {
 		try {
@@ -100,24 +97,21 @@ public class ServerNetInterface implements IClient, Runnable{
 	public void run() {
 		//This method keeps listening the socket
 		TaskMessage message;
-		while(true){
-			try {
-				if(input.available()>0){
-					message = (TaskMessage) input.readObject();
-					if(message != null){
-						toRun.add(message);
-					}
-					Thread.sleep(Constants.LISTEN_INTERVAL);
+		
+		try {
+			while(true){
+				message = (TaskMessage) input.readObject();
+				System.out.println("Message received");
+				if(message != null){
+					toRun.add(message);
 				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Thread.sleep(Constants.LISTEN_INTERVAL);
 			}
+		} catch (EOFException e) {
+			System.out.print("Connection Closed");
+		} catch (InterruptedException e) {
+		} catch (ClassNotFoundException e) {
+		} catch (IOException e) {
 		}
-	}
-	
-	
+	}	
 }

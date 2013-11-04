@@ -72,10 +72,19 @@ public class ServerMenager{
 	
 	public void removeProcessingTask(Task task){
 		System.out.print(task.toString()+"\n");
-		processing.remove(task);
-		Node node = nodes.remove(task);
-		if(node != null)
-			scheduler.removeTask(node);
+		Task localTask = null;
+		for (Task t : nodes.keySet()){
+			if(task.equals(t)){
+				localTask = t;
+			}
+		}
+		if(localTask == null){
+			System.out.print("Unreadable task");
+			System.exit(1);
+		}
+		processing.remove(localTask);
+		Node node = nodes.remove(localTask);
+		scheduler.removeTask(node);
 	}
 	
 	public IServer getFreeServer() throws Exception{

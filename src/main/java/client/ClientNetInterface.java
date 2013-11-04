@@ -5,65 +5,61 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
 
 import parsing.Parser;
-import server.Agent;
 
 import model.Graph;
 import network.Constants.SERVER_STATUS;
-import network.FailMessage;
-import network.SuccessMessage;
-import network.TaskMessage;
+import network.*;
 
 public class ClientNetInterface implements IServer, Runnable{
-	Socket client;
-	ObjectInput input;
-	ObjectOutput output;
-	String[] message;
-	
-	
+	private Socket client;
+	private ObjectInput input;
+	private ObjectOutput output;
+	private ServerMenager menager;
 	
 	public static void main(String[] args) throws Exception{
-		System.out.println("0Client ready");
-
-		ClientNetInterface server = new ClientNetInterface();
-		System.out.println("Client ready");
-
-		if( args.length < 2){
-			//throw new Exception(String.format("Usage: java %s [file_name] [hostname]+", args[0]));
-		}
-		Parser parser = new Parser();
-		parser.parse("file1.txt");//args[0]);
-		Graph g = parser.getGraph();
-		Scheduler sc = new Scheduler(g);
-		System.out.println("1Client ready");
-
-		ServerMenager menager = new ServerMenager(sc);
-		
-		menager.addServer(server);
-		System.out.println("2Client ready");
-		while(menager.hasMessage()){
-			menager.delegate();
+		ServerMenager menager;
+		ClientNetInterface server = null;
+		Scheduler sc;
+		Thread listener;
+		try{
+			if( args.length < 2){
+				//throw new Exception("Usage: java ClientNetInterface [file_name] [hostname]+");
+			}
+			Parser parser = new Parser();
+			parser.parse("file1.txt");//args[0]);
+			Graph g = parser.getGraph();
+			sc = new Scheduler(g);
+	
+			menager = new ServerMenager(sc);
+			server = new ClientNetInterface(menager);
+			menager.addServer(server);
+			listener = new Thread(server);
+			listener.start();
+			System.out.println("Client ready");
+	
+			while(menager.hasMessage()){
+				menager.delegate();
+				Thread.sleep(1000);
+			}
+		}finally{
+			server.closeSocket();
 		}
 	}
 	
-	public ClientNetInterface(){
+	public ClientNetInterface(ServerMenager menager){
 		try {
-
+			this.menager = menager;
 			client = new Socket("localhost", 1510);
 			System.out.println("Client ready");
-
 			client.getInputStream();
 			client.getOutputStream();
-						System.out.println("Client ready++");
 			output = new ObjectOutputStream(client.getOutputStream());
 			output.flush();
 			input = new ObjectInputStream(client.getInputStream());
-			System.out.println("Client ready--");
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -78,6 +74,8 @@ public class ClientNetInterface implements IServer, Runnable{
 
 	}
 	
+	public ServerMenager getMenager(){ return menager;}
+	
 	public void sendRequest(TaskMessage message) {
 		try {
 			output.writeObject(message);
@@ -87,7 +85,7 @@ public class ClientNetInterface implements IServer, Runnable{
 	}
 
 	public SERVER_STATUS getStatus() {
-		return null;
+		return SERVER_STATUS.Avaible;
 	}
 
 	public Iterator<SuccessMessage> getSuccessIterator() {
@@ -100,8 +98,33 @@ public class ClientNetInterface implements IServer, Runnable{
 	}
 
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		//This method keeps listening the socket
+		Message message;
+		while(menager.hasMessage()){
+			try {
+				System.out.print("message comming\n");
+				message = (Message) input.readObject();
+				if(message != null){
+					if(message instanceof SuccessMessage){
+						menager.removeProcessingTask(((SuccessMessage)message).getTask());
+						System.out.print("message processed\n");
+					}
+					if(message instanceof FailMessage){
+						menager.removeProcessingTask(((FailMessage)message).getTask());
+						System.out.print("message processed\n");
+					}
+					if(message instanceof ServerStatusMessage){
+						//TODO server status manipulation
+					}
+				}
+				Thread.sleep(Constants.LISTEN_INTERVAL);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-
 }
